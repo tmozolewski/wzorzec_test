@@ -1,1 +1,0 @@
-# wzorzec_test
