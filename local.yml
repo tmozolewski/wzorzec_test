@@ -1,0 +1,24 @@
+---
+- hosts: local
+
+  vars:
+    dysk: 'sda'
+    montowanie: '/mnt/dysk'
+    partycja_glowna: '1'
+    fs: 'ext4'
+    zdalne: 'tak'
+
+  tasks:
+  
+    - name: Sprawdzanie systemu
+      fail: msg="SYSTEM LIVE MUSI BYC 64-bitowy"
+      when: ansible_architecture != "x86_64"
+      tags: always
+
+    - name: Partycje
+      import_tasks: dysk.yml
+      tags: dysk
+
+    - name: Wzorzec
+      import_tasks: wzorzec.yml
+      tags: wzorzec
