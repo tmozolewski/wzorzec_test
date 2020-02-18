@@ -8,10 +8,10 @@
 
 - name: WYKRYTE DYSKI
   debug:
-    msg: "{{ ddd }}"
+    msg: "{{ ddd | list }}"
 
 - pause:
-    prompt: "PODAJ DYSK Z {{ ddd |  }}"
+    prompt: "PODAJ DYSK Z {{ ddd | list }}"
     echo: yes
   register: result
   
