@@ -4,7 +4,7 @@
   set_fact:
     ddd: "{{ ddd|default([]) + [ item.key ] }}"
   with_dict: "{{ ansible_devices }}"
-  when: item.value.sectors != "0" and item.value.removable == "0"
+  #  when: item.value.sectors != "0" and item.value.removable == "0"
 
 - name: WYKRYTE DYSKI
   debug:
