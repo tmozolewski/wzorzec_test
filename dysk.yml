@@ -25,7 +25,7 @@
 
 - set_fact:
     dysk: dyski[0]
-  when: dyski | length = 1
+  when: dyski | length == 1
 
 
 - pause:
