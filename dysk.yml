@@ -22,6 +22,8 @@
     dysk: "{{result.user_input }}"
   when: dyski | length > 1
   
+- debug:
+    var: dyski[0]
 
 - set_fact:
     dysk: dyski
