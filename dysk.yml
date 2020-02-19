@@ -24,9 +24,11 @@
   
 
 - set_fact:
-    dysk: dyski[0]
+    dysk: dyski
   when: dyski | length == 1
 
+- debug:
+    var: dysk
 
 - set_fact:
     partycja_glowna: p1
