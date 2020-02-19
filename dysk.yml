@@ -2,7 +2,7 @@
   
 - name: Wykrywanie dyskow
   set_fact:
-    ddd: "{{ dyski | default([]) + [ item.key ] }}"
+    dyski: "{{ dyski | default([]) + [ item.key ] }}"
   no_log: True  
   with_dict: "{{ hostvars[inventory_hostname].ansible_devices }}"
   when: item.value.sectors != "0" and item.value.removable == "0"
@@ -12,7 +12,7 @@
     msg: "{{ dyski | list }}"
 
 - pause:
-    prompt: "PODAJ DYSK Z {{ ddd | list }}"
+    prompt: "PODAJ DYSK Z {{ dyski | list }}"
     echo: yes
   register: result
   when: dyski | length > 1
