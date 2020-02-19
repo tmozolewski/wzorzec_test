@@ -9,7 +9,7 @@
 
 - name: WYKRYTE DYSKI
   debug:
-    msg: "{{ dyski | list }}"
+    var: dyski
 
 - pause:
     prompt: "PODAJ DYSK Z {{ dyski | list }}"
@@ -22,11 +22,9 @@
     dysk: "{{result.user_input }}"
   when: dyski | length > 1
   
-- debug:
-    var: dyski[0]
 
 - set_fact:
-    dysk: dyski[0]
+    dysk: "{{ dyski[0] }}"
   when: dyski | length == 1
 
 - debug:
