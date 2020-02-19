@@ -62,7 +62,7 @@
 - name: Tworzenie partycji glownej na dysku /dev/{{ dysk }}
   parted:
     device: "/dev/{{ dysk }}"
-    number: "{{ partycja_glowna }}"
+    number: 1
     state: present
     flags: boot
     unit: GB
