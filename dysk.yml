@@ -28,6 +28,10 @@
   when: dyski | length == 1
 
 
+- set_fact:
+    partycja_glowna: p1
+  when: dysk | regex_search('nvme')
+
 - pause:
     prompt: "Formatuje dysk /dev/{{ dysk }}, rozmiar {{ hostvars[inventory_hostname]['ansible_devices'][ dysk ]['size'] }}"
     seconds: 10
