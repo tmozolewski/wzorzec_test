@@ -5,7 +5,7 @@
     dyski: "{{ dyski | default([]) + [ item.key ] }}"
   no_log: True  
   with_dict: "{{ hostvars[inventory_hostname].ansible_devices }}"
-  when: item.value.sectors != "0" and item.value.removable == "0"
+  when: item.value.sectors != "0" and item.value.removable == "0" and item.value.host != ""
 
 - name: WYKRYTE DYSKI
   debug:
