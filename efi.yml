@@ -55,7 +55,7 @@
     fstype: vfat
     dev: "/dev/{{ dysk }}{{ partycja_efi }}"
     force: yes
-    opts: -F 32
+    opts: -F32
   when: part_1 is changed
 
 - name: Formatowanie partycji /dev/{{ dysk }}{{ partycja_glowna }}
