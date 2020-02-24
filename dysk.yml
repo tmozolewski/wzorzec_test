@@ -30,48 +30,11 @@
 - debug:
     var: dysk
 
-- set_fact:
-    partycja_glowna: p1
-  when: dysk | regex_search('nvme')
-
-- pause:
-    prompt: "Formatuje dysk /dev/{{ dysk }}, rozmiar {{ hostvars[inventory_hostname]['ansible_devices'][ dysk ]['size'] }}"
-    seconds: 10
-
-- name: Odmontownie dysku
-  mount:
-    path: "{{ montowanie }}"
-    src: "/dev/{{ dysk }}{{ partycja_glowna }}"
-    state: unmounted
-
-- name: Sprawdzanie dysku
-  parted:
-    device: "/dev/{{ dysk }}"
-    unit: GB
-  register: dysk_info
-
-- name: Usuwam wszytskie pratycje z dysku /dev/{{ dysk }}
-  parted:
-    device: "/dev/{{ dysk }}"
-    number: "{{ item.num }}"
-    state: absent
-  with_items:
-   - "{{ dysk_info.partitions }}"
 
 
-- name: Tworzenie partycji glownej na dysku /dev/{{ dysk }}
-  parted:
-    device: "/dev/{{ dysk }}"
-    number: 1
-    state: present
-    flags: boot
-    unit: GB
-  register: part_1
+- inport_tasks: efi.yml
+  when: dysk | regex_search('nvm') 
 
-- name: Formatowanie partycji /dev/{{ dysk }}{{ partycja_glowna }}
-  filesystem:
-    fstype: "{{ fs }}"
-    dev: "/dev/{{ dysk }}{{ partycja_glowna }}"
-    opts: -j
-    force: yes
-  when: part_1 is changed
+- inport_tasks: legacy.yml
+  when: dysk | regex_search('sd') 
+

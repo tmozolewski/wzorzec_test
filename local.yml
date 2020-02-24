@@ -4,7 +4,6 @@
   vars:
     dysk: 'sda'
     montowanie: '/mnt/dysk'
-    partycja_glowna: '1'
     fs: 'ext4'
     zdalne: 'tak'
 
