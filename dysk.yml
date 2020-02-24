@@ -32,9 +32,9 @@
 
 
 
-- inport_tasks: efi.yml
+- import_tasks: efi.yml
   when: dysk | regex_search('nvm') 
 
-- inport_tasks: legacy.yml
+- import_tasks: legacy.yml
   when: dysk | regex_search('sd') 
 
