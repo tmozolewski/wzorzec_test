@@ -5,7 +5,11 @@
     dysk: 'sda'
     montowanie: '/mnt/dysk'
     fs: 'ext4'
-    zdalne: 'tak'
+    partycja_glowna: 1
+    partycja_efi: p1
+    partycja_glowna_efi: p2
+    efi: nie
+
 
   tasks:
   
@@ -14,10 +18,46 @@
       when: ansible_architecture != "x86_64"
       tags: always
 
+    - name: Wykrywanie dyskow
+      set_fact:
+        dyski: "{{ dyski | default([]) + [ item.key ] }}"
+      no_log: True
+      with_dict: "{{ hostvars[inventory_hostname].ansible_devices }}"
+      when: item.value.sectors != "0" and item.value.removable == "0" and item.value.host != ""
+
+    - pause:
+        prompt: "PODAJ DYSK DO INSTALACJI SYSTEMU: {{ dyski | list }}"
+      echo: yes
+      register: result
+      when: dyski | length > 1
+
+
+    - set_fact:
+        dysk: "{{result.user_input }}"
+      when: dyski | length > 1
+
+
+    - set_fact:
+        dysk: "{{ dyski[0] }}"
+      when: dyski | length == 1
+    
+    - set_fact:
+        efi: "tak"
+      when: dysk | regex_search('nvm')
+
+    - name: Partycje EFI
+      import_tasks: dysk_efi.yml
+      when: efi == "tak"
+
     - name: Partycje
       import_tasks: dysk.yml
-      tags: dysk
+      when: efi == "nie"
 
     - name: Wzorzec
       import_tasks: wzorzec.yml
-      tags: wzorzec
+      when: efi == "nie"
+
+
+    - name: Wzorzec EFI
+      import_tasks: wzorzec_efi.yml
+      when: efi == "tak"

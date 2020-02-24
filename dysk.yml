@@ -1,40 +1,44 @@
----
-  
-- name: Wykrywanie dyskow
-  set_fact:
-    dyski: "{{ dyski | default([]) + [ item.key ] }}"
-  no_log: True  
-  with_dict: "{{ hostvars[inventory_hostname].ansible_devices }}"
-  when: item.value.sectors != "0" and item.value.removable == "0" and item.value.host != ""
-
-- name: WYKRYTE DYSKI
-  debug:
-    var: dyski
-
 - pause:
-    prompt: "PODAJ DYSK Z {{ dyski | list }}"
-    echo: yes
-  register: result
-  when: dyski | length > 1
-  
+    prompt: "Formatuje dysk /dev/{{ dysk }}, rozmiar {{ hostvars[inventory_hostname]['ansible_devices'][ dysk ]['size'] }}"
+    seconds: 10
 
 - set_fact:
-    dysk: "{{result.user_input }}"
-  when: dyski | length > 1
-  
+    partycja_glowna: 1
 
-- set_fact:
-    dysk: "{{ dyski[0] }}"
-  when: dyski | length == 1
+- name: Odmontownie dysku
+  mount:
+    path: "{{ montowanie }}"
+    src: "/dev/{{ dysk }}{{ partycja_glowna }}"
+    state: unmounted
 
-- debug:
-    var: dysk
+- name: Sprawdzanie dysku
+  parted:
+    device: "/dev/{{ dysk }}"
+    unit: GB
+  register: dysk_info
+
+- name: Usuwam wszytskie pratycje z dysku /dev/{{ dysk }}
+  parted:
+    device: "/dev/{{ dysk }}"
+    number: "{{ item.num }}"
+    state: absent
+  with_items:
+   - "{{ dysk_info.partitions }}"
 
 
+- name: Tworzenie partycji glownej na dysku /dev/{{ dysk }}
+  parted:
+    device: "/dev/{{ dysk }}"
+    number: 1
+    state: present
+    flags: boot
+    unit: GB
+  register: part_1
 
-- import_tasks: efi.yml
-  when: dysk | regex_search('nvm') 
-
-- import_tasks: legacy.yml
-  when: dysk | regex_search('sd') 
-
+- name: Formatowanie partycji /dev/{{ dysk }}{{ partycja_glowna }}
+  filesystem:
+    fstype: "{{ fs }}"
+    dev: "/dev/{{ dysk }}{{ partycja_glowna }}"
+    opts: -j
+    force: yes
+  when: part_1 is changed

@@ -1,0 +1,102 @@
+---
+  
+- name: Tworzenie katalogu montowania
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - "{{ montowanie }}"
+    - "{{ montowanie }}"/efi
+
+
+
+- name: Montowanie dysku
+  mount:
+    path: "{{ montowanie }}"
+    src: "/dev/{{ dysk }}{{ partycja_glowna_efi }}"
+    fstype: "{{ fs }}"
+    fstab: /tmp/fstab.tmp
+    state: mounted
+    
+  
+- name: Pobranie wzorca
+  get_url:
+    url: http://91.239.155.79/xubuntu_wzor_czysty_18.04.tar.gz
+    dest: "{{ montowanie }}/"
+    tmp_dest: "{{ montowanie }}/"
+    force: yes
+    timeout: 60
+
+
+- name: Rozpakowywanie
+  unarchive:
+    src: "{{ montowanie }}/xubuntu_wzor_czysty_18.04.tar.gz"
+    dest: "{{ montowanie }}/"
+    remote_src: yes
+
+
+- name: Zmiana systemu plikow w fstab
+  replace:
+    regexp: 'ext4'
+    replace: "{{ fs }}"
+    dest: "{{ montowanie }}/etc/fstab"
+
+
+- name: Montuje potrzbene katalogi    
+  mount:
+    path: "{{ montowanie }}/{{ item }}"
+    src: "{{ item }}"
+    fstab: /tmp/fstab.bind
+    state: mounted
+    fstype: ext4
+    opts: bind
+  with_items:
+    - /proc
+    - /dev
+    - /sys
+
+
+- name: Dodanie do fstab
+  mount:
+    src: "/dev/{{ dysk }}{{ partycja_glowna_efi }}"
+    path: /
+    state: present
+    fstab: "{{ montowanie }}/etc/fstab"
+    fstype: "{{ fs }}"
+    opts: errors=remount-ro
+    passno: 1
+    
+- name: Dodanie do fstab EFI
+  mount:
+    src: "/dev/{{ dysk }}{{ partycja_efi }}"
+    path: /boot/efi
+    state: present
+    fstab: "{{ montowanie }}/etc/fstab"
+    fstype: vfat
+    opts: umask=0077
+    passno: 1
+
+- name: Montowanie EFI
+  mount:
+    path: "{{ montowanie }}"\efi
+    src: "/dev/{{ dysk }}{{ partycja_efi }}"
+    fstype: vfat
+    fstab: /tmp/fstab.tmp
+    state: mounted
+
+- name: Instalacja pakietow
+  command: "chroot {{ montowanie }}\efi apt install grub-efi"
+
+- name: Instalacja GRUB-a
+  command: "chroot {{ montowanie }}\efi grub-install /dev/{{ dysk }}"
+  
+
+- name: Grub-Update
+  command: "chroot {{ montowanie }}\efi update-grub2"
+
+
+- debug:
+    msg: "Instalacja zostala zakonczona. Zrestaruj komputer."
+  
+
