@@ -35,20 +35,19 @@
     device: "/dev/{{ dysk }}"
     number: 1
     state: present
-    flags: boot
+    flags: boot, esp
     part_end: 20MiB
     unit: MB
-  register: part_2
+  register: part_1
 
 - name: Tworzenie partycji glownej na dysku /dev/{{ dysk }}
   parted:
     device: "/dev/{{ dysk }}"
     number: 2
     state: present
-    flags: boot, esp
     part_start: 20MiB
-    unit: GB
-  register: part_1
+    unit: MB
+  register: part_2
 
 
 - name: Formatowanie partycji /dev/{{ dysk }}{{ partycja_efi }}
@@ -57,11 +56,11 @@
     dev: "/dev/{{ dysk }}{{ partycja_efi }}"
     force: yes
     opts: -F 32
-  when: part_2 is changed
+  when: part_1 is changed
 
 - name: Formatowanie partycji /dev/{{ dysk }}{{ partycja_glowna }}
   filesystem:
     fstype: "{{ fs }}"
     dev: "/dev/{{ dysk }}{{ partycja_glowna }}"
     force: yes
-  when: part_1 is changed
+  when: part_2 is changed
