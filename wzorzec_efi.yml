@@ -7,7 +7,7 @@
     mode: 0755
   with_items:
     - "{{ montowanie }}"
-    - "{{ montowanie }}"/efi
+    - "{{ montowanie_efi }}"
 
 
 
@@ -79,21 +79,21 @@
 
 - name: Montowanie EFI
   mount:
-    path: "{{ montowanie }}"\efi
+    path: "{{ montowanie_efi }}"
     src: "/dev/{{ dysk }}{{ partycja_efi }}"
     fstype: vfat
     fstab: /tmp/fstab.tmp
     state: mounted
 
 - name: Instalacja pakietow
-  command: "chroot {{ montowanie }}\efi apt install grub-efi"
+  command: "chroot {{ montowanie_efi }} apt install grub-efi"
 
 - name: Instalacja GRUB-a
-  command: "chroot {{ montowanie }}\efi grub-install /dev/{{ dysk }}"
+  command: "chroot {{ montowanie_efi }} grub-install /dev/{{ dysk }}"
   
 
 - name: Grub-Update
-  command: "chroot {{ montowanie }}\efi update-grub2"
+  command: "chroot {{ montowanie_efi }} update-grub2"
 
 
 - debug:
