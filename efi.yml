@@ -45,7 +45,7 @@
     device: "/dev/{{ dysk }}"
     number: 2
     state: present
-    flags: boot
+    flags: boot, esp
     part_start: 20MiB
     unit: GB
   register: part_1
@@ -56,6 +56,7 @@
     fstype: vfat
     dev: "/dev/{{ dysk }}{{ partycja_efi }}"
     force: yes
+    opts: -F 32
   when: part_2 is changed
 
 - name: Formatowanie partycji /dev/{{ dysk }}{{ partycja_glowna }}
