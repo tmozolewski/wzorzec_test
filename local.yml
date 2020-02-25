@@ -7,8 +7,8 @@
     montowanie_efi: "{{ montowanie }}/boot/efi"
     fs: 'ext4'
     partycja_glowna: 1
-    partycja_efi: p1
-    partycja_glowna_efi: p2
+    partycja_efi: 1
+    partycja_glowna_efi: 2
     efi: nie
 
 
@@ -46,6 +46,15 @@
         efi: "tak"
       when: dysk | regex_search('nvm')
 
+    - set_fact:
+        partycja_glowna_efi: p1
+      when: dysk | regex_search('nvm')
+    
+    - set_fact:
+        partycja_glowna: p2
+      when: dysk | regex_search('nvm')
+
+    
     - name: Partycje EFI
       import_tasks: dysk_efi.yml
       when: efi == "tak"
