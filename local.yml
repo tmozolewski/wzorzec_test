@@ -47,11 +47,11 @@
       when: dysk | regex_search('nvm')
 
     - set_fact:
-        partycja_glowna_efi: p1
+        partycja_efi: p1
       when: dysk | regex_search('nvm')
     
     - set_fact:
-        partycja_glowna: p2
+        partycja_glowna_efi: p2
       when: dysk | regex_search('nvm')
 
     
