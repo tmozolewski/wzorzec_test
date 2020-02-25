@@ -61,7 +61,7 @@
     fstab: "{{ montowanie }}/etc/fstab"
     fstype: "{{ fs }}"
     opts: errors=remount-ro
-    passno: 1
+    passno: '1'
     
     
 - name: Instalacja GRUB-a
