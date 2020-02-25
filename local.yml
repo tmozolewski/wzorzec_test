@@ -17,7 +17,6 @@
     - name: Sprawdzanie systemu
       fail: msg="SYSTEM LIVE MUSI BYC 64-bitowy"
       when: ansible_architecture != "x86_64"
-      tags: always
 
     - name: Wykrywanie dyskow
       set_fact:
@@ -25,6 +24,10 @@
       no_log: True
       with_dict: "{{ hostvars[inventory_hostname].ansible_devices }}"
       when: item.value.sectors != "0" and item.value.removable == "0" and item.value.host != ""
+    
+    - name: WYKRYTE DYSKI
+        msg: "{{ dyski | list }}"
+      when: dyski | length > 1
 
     - pause:
         prompt: "PODAJ DYSK DO INSTALACJI SYSTEMU: {{ dyski | list }}"
@@ -41,6 +44,11 @@
     - set_fact:
         dysk: "{{ dyski[0] }}"
       when: dyski | length == 1
+
+    - name: Sprawdzanie wybranego dysku
+      fail: msg="PODANY DYSK JEST NIEPRAWIDLOWY"
+      when: dysk not in dyski"
+      
     
     - set_fact:
         efi: "tak"

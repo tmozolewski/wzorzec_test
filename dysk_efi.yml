@@ -26,7 +26,7 @@
 - name: Tworzenie partycji EFI na dysku /dev/{{ dysk }}
   parted:
     device: "/dev/{{ dysk }}"
-    number: "{{ partycja_glowna_efi | regex_replace('p') }}"
+    number: "{{ partycja_efi | regex_replace('p') }}"
     state: present
     flags: boot, esp
     part_end: 512MiB
@@ -36,7 +36,7 @@
 - name: Tworzenie partycji glownej na dysku /dev/{{ dysk }}
   parted:
     device: "/dev/{{ dysk }}"
-    number: "{{ partycja_glowna | regex_replace('p') }}"
+    number: "{{ partycja_glowna_efi | regex_replace('p') }}"
     state: present
     part_start: 512MiB
     unit: MB
