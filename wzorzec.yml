@@ -18,7 +18,7 @@
   
 - name: Pobranie wzorca
   get_url:
-    url: http://91.239.155.79/xubuntu_wzor_czysty_18.04.tar.gz
+    url: "http://91.239.155.79/{{ wzorzec }}"
     dest: "{{ montowanie }}/"
     tmp_dest: "{{ montowanie }}/"
     force: yes
@@ -27,7 +27,7 @@
 
 - name: Rozpakowywanie
   unarchive:
-    src: "{{ montowanie }}/xubuntu_wzor_czysty_18.04.tar.gz"
+    src: "{{ montowanie }}/{{ wzorzec }}"
     dest: "{{ montowanie }}/"
     remote_src: yes
 

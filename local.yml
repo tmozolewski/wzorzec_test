@@ -6,10 +6,11 @@
     montowanie: '/mnt/dysk'
     montowanie_efi: "{{ montowanie }}/boot/efi"
     fs: 'ext4'
+    wzorzec: 'xubuntu_wzor_czysty_18.04.tar.gz'
     partycja_glowna: 1
     partycja_efi: 1
     partycja_glowna_efi: 2
-    efi: nie
+    efi: tak
 
 
   tasks:
