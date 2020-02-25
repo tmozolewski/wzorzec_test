@@ -41,15 +41,20 @@
         dysk: "{{result.user_input }}"
       when: dyski | length > 1
 
-
     - set_fact:
         dysk: "{{ dyski[0] }}"
       when: dyski | length == 1
 
+      
     - name: Sprawdzanie wybranego dysku
-      fail: msg="PODANY DYSK JEST NIEPRAWIDLOWY"
-      when: dysk != item
+      set_fact:
+        OK: 1
+      when: dysk == item  
       loop: "{{ dyski }}"
+
+    - fail: 
+        msg: "PODANY DYSK JEST NIEPRAWIDLOWY"
+      when: OK != 1
       
     
     - set_fact:
