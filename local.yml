@@ -54,7 +54,7 @@
 
     - fail: 
         msg: "PODANY DYSK JEST NIEPRAWIDLOWY"
-      when: OK != 1
+      when: OK | default('0') != 1
       
     
     - set_fact:
