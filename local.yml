@@ -48,7 +48,8 @@
 
     - name: Sprawdzanie wybranego dysku
       fail: msg="PODANY DYSK JEST NIEPRAWIDLOWY"
-      when: dysk not in dyski"
+      when: dysk != item
+      loop: "{{ dyski }}"
       
     
     - set_fact:
