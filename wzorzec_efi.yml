@@ -85,15 +85,20 @@
     fstab: /tmp/fstab.tmp
     state: mounted
 
+- name: Dodanie DNS
+  lineinfile:
+    path: "{{ montowanie }}/etc/resolv.conf"
+    line: nameserver 8.8.8.8 
+
 - name: Instalacja pakietow
-  command: "chroot {{ montowanie_efi }} apt install grub-efi"
+  command: "chroot {{ montowanie }} apt install grub-efi"
 
 - name: Instalacja GRUB-a
-  command: "chroot {{ montowanie_efi }} grub-install /dev/{{ dysk }}"
+  command: "chroot {{ montowanie }} grub-install /dev/{{ dysk }}"
   
 
 - name: Grub-Update
-  command: "chroot {{ montowanie_efi }} update-grub2"
+  command: "chroot {{ montowanie }} update-grub2"
 
 
 - debug:

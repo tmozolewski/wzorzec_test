@@ -30,7 +30,7 @@
     number: 1
     state: present
     flags: boot, esp
-    part_end: 20MiB
+    part_end: 512MiB
     unit: MB
   register: part_1
 
@@ -39,7 +39,7 @@
     device: "/dev/{{ dysk }}"
     number: 2
     state: present
-    part_start: 20MiB
+    part_start: 512MiB
     unit: MB
   register: part_2
 

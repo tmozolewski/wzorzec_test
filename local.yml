@@ -4,7 +4,7 @@
   vars:
     dysk: 'sda'
     montowanie: '/mnt/dysk'
-    montowanie_efi: '/mnt/efi'
+    montowanie_efi: "{{ montowanie }}/boot/efi"
     fs: 'ext4'
     partycja_glowna: 1
     partycja_efi: p1
