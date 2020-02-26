@@ -10,7 +10,7 @@
     partycja_glowna: 1
     partycja_efi: 1
     partycja_glowna_efi: 2
-    efi: tak
+    efi: nie
 
 
   tasks:
