@@ -96,4 +96,4 @@
 
 
     - debug:
-    msg: "Instalacja zostala zakonczona. Zrestaruj komputer."  
+        msg: "Instalacja zostala zakonczona. Zrestaruj komputer."  
