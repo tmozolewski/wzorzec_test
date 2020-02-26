@@ -20,7 +20,7 @@
     state: mounted
     
   
-- name: Pobranie wzorca (Przy lączu 100Mb/s trwa to około 15 minut)
+- name: Pobranie wzorca - Przy lączu 100 Mb/s trwa to około 15 minut
   get_url:
     url: "http://91.239.155.79/{{ wzorzec }}"
     dest: "{{ montowanie }}/"
@@ -29,7 +29,7 @@
     timeout: 60
 
 
-- name: Rozpakowywanie
+- name: Instalowanie
   unarchive:
     src: "{{ montowanie }}/{{ wzorzec }}"
     dest: "{{ montowanie }}/"
