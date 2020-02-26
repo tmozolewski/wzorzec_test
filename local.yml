@@ -56,11 +56,17 @@
     - fail: 
         msg: "PODANY DYSK JEST NIEPRAWIDLOWY"
       when: OK | default('0') != 1
-      
+   
+    - pause:
+        prompt: "CZY INSTALOWAĆ UEFI ? t/n"
+        echo: yes
+      register: uefi
+      when: not ( dysk | regex_search('nvm')) 
+  
     
     - set_fact:
         efi: "tak"
-      when: dysk | regex_search('nvm')
+      when: (dysk | regex_search('nvm')) or (uefi.user_input | default('n')) == 't')
 
     - set_fact:
         partycja_efi: p1
@@ -87,3 +93,7 @@
     - name: Wzorzec EFI
       import_tasks: wzorzec_efi.yml
       when: efi == "tak"
+
+
+    - debug:
+    msg: "Instalacja zostala zakonczona. Zrestaruj komputer."  

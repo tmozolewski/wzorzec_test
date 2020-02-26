@@ -16,7 +16,7 @@
     state: mounted
     
   
-- name: Pobranie wzorca
+- name: Pobranie wzorca (Przy lączu 100Mb/s trwa to około 15 minut)
   get_url:
     url: "http://91.239.155.79/{{ wzorzec }}"
     dest: "{{ montowanie }}/"
@@ -71,8 +71,4 @@
 - name: Grub-Update
   command: "chroot {{ montowanie }} update-grub2"
 
-
-- debug:
-    msg: "Instalacja zostala zakonczona. Zrestaruj komputer."
-  
 
