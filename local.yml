@@ -6,12 +6,10 @@
     montowanie: '/mnt/dysk'
     montowanie_efi: "{{ montowanie }}/boot/efi"
     fs: 'ext4'
-    wzorzec: 'xubuntu_wzor_czysty_18.04.tar.gz'
     partycja_glowna: 1
     partycja_efi: 1
     partycja_glowna_efi: 2
     efi: nie
-
 
   tasks:
   
@@ -19,18 +17,26 @@
       fail: msg="SYSTEM LIVE MUSI BYC 64-bitowy"
       when: ansible_architecture != "x86_64"
 
+    - pause:
+        prompt: "PODAJ WERSJE UBUNTU DO INSTALACJI: 18/20"
+        echo: yes
+      register: ubuntu_wer
+
+    - set_fact:
+        wzorzec: "xubuntu_wzor_czysty_{{ ubuntu_wer.user_input }}.04.tar.gz"     
+
     - name: Wykrywanie dyskow
       set_fact:
         dyski: "{{ dyski | default([]) + [ item.key ] }}"
       no_log: True
       with_dict: "{{ hostvars[inventory_hostname].ansible_devices }}"
       when: item.value.sectors != "0" and item.value.removable == "0" and item.value.host != ""
-    
+   
     - name: WYKRYTE DYSKI
       debug:
         msg: "{{ dyski | list }}"
       when: dyski | length > 1
-
+    
     - pause:
         prompt: "PODAJ DYSK DO INSTALACJI SYSTEMU: {{ dyski | list }}"
         echo: yes

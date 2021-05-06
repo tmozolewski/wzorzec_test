@@ -15,7 +15,7 @@
     fstab: /tmp/fstab.tmp
     state: mounted
     
-  
+
 - name: Pobranie wzorca - Przy lączu 100 Mb/s trwa to około 15 minut
   get_url:
     url: "http://91.239.155.79/{{ wzorzec }}"
@@ -23,6 +23,7 @@
     tmp_dest: "{{ montowanie }}/"
     force: yes
     timeout: 60
+    #    checksum: "md5:{{ lookup('url', 'http://91.239.155.79/{{ wzorzec }}.md5sum') }}"
 
 
 - name: Instalowanie
@@ -63,7 +64,13 @@
     opts: errors=remount-ro
     passno: '1'
     
-    
+- name: Modyfikacja do Lenovo ThinkCentre
+  replace:
+    path: "{{ montowanie }}/etc/default/grub"
+    regexp: '(GRUB_CMDLINE_LINUX_DEFAULT).*'
+    replace: '\1="quiet splash snd_hda_intel.dmic_detect=0"'
+  when: ansible_product_version is search ("ThinkCentre") and ubuntu_wer.user_input == "20"
+
 - name: Instalacja GRUB-a
   command: "chroot {{ montowanie }} grub-install /dev/{{ dysk }}"
   

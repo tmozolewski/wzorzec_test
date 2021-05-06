@@ -29,6 +29,7 @@
     number: "{{ partycja_efi | regex_replace('p') }}"
     state: present
     flags: boot, esp
+    label: gpt 
     part_end: 512MiB
     unit: MB
   register: part_1
@@ -40,6 +41,7 @@
     state: present
     part_start: 512MiB
     unit: MB
+    label: gpt
   register: part_2
 
 

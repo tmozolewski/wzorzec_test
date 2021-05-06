@@ -10,7 +10,6 @@
     - "{{ montowanie_efi }}"
 
 
-
 - name: Montowanie dysku
   mount:
     path: "{{ montowanie }}"
@@ -18,7 +17,7 @@
     fstype: "{{ fs }}"
     fstab: /tmp/fstab.tmp
     state: mounted
-    
+
   
 - name: Pobranie wzorca - Przy lączu 100 Mb/s trwa to około 15 minut
   get_url:
@@ -85,13 +84,23 @@
     fstab: /tmp/fstab.tmp
     state: mounted
 
+- name: Modyfikacja do Lenovo ThinkCentre
+  replace:
+    path: "{{ montowanie }}/etc/default/grub"
+    regexp: '(GRUB_CMDLINE_LINUX_DEFAULT).*'
+    replace: '\1="quiet splash snd_hda_intel.dmic_detect=0"'
+  when: ansible_product_version is search ("ThinkCentre") and ubuntu_wer.user_input == "20"
+
 - name: Dodanie DNS
   lineinfile:
     path: "{{ montowanie }}/etc/resolv.conf"
     line: nameserver 8.8.8.8 
 
 - name: Instalacja pakietow
-  command: "chroot {{ montowanie }} apt install --yes --force-yes grub-efi"
+  command: chroot "{{ montowanie }}" apt update
+
+- name: Instalacja pakietow
+  command: chroot "{{ montowanie }}" apt install --yes grub-efi
 
 - name: Instalacja GRUB-a
   command: "chroot {{ montowanie }} grub-install /dev/{{ dysk }}"
