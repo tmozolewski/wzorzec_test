@@ -24,8 +24,9 @@
     url: "http://91.239.155.79/{{ wzorzec }}"
     dest: "{{ montowanie }}/"
     tmp_dest: "{{ montowanie }}/"
-    force: yes
+    #   force: yes
     timeout: 60
+    checksum: "md5:{{ lookup('url', 'http://91.239.155.79/{{ wzorzec }}.md5sum') }}"
 
 
 - name: Instalowanie
