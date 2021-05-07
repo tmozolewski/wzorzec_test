@@ -15,7 +15,16 @@
     fstab: /tmp/fstab.tmp
     state: mounted
     
-
+- name: Pobiermanie sumy kontrolnej
+  get_url:
+    url: "http://91.239.155.79/{{ wzorzec }}.md5sum"
+    dest: "{{ montowanie }}/"
+    tmp_dest: "{{ montowanie }}/"
+    
+- name: Zapis sumy kontrolnej
+  shell: "cat {{ montowanie }}/{{ wzorzec }}.md5sum | awk '{ print $1 }'"
+  register: md5sum
+    
 - name: Pobranie wzorca - Przy lączu 100 Mb/s trwa to około 15 minut
   get_url:
     url: "http://91.239.155.79/{{ wzorzec }}"
@@ -23,7 +32,7 @@
     tmp_dest: "{{ montowanie }}/"
     #force: yes
     timeout: 60
-    checksum: "md5:{{ lookup('url', 'http://91.239.155.79/{{ wzorzec }}.md5sum') }}"
+    checksum: "md5:{{ md5sum.stdout }}"
 
 
 - name: Instalowanie
