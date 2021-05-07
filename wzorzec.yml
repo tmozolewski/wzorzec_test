@@ -30,10 +30,8 @@
     url: "http://91.239.155.79/{{ wzorzec }}"
     dest: "{{ montowanie }}/"
     tmp_dest: "{{ montowanie }}/"
-    #force: yes
     timeout: 60
-    checksum: md5:773b1d9946104cea2144a31f3e18ba5
-    #checksum: "md5:{{ md5sum.stdout }}"
+    checksum: "md5:{{ md5sum.stdout }}"
 
 
 - name: Instalowanie
