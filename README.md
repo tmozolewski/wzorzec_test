@@ -10,7 +10,7 @@ Do uruchomienie playbooka wymagane są pakiery git oraz ansible
  ```
  sudo apt-add-repository multiverse 
  sudo apt-add-repository --yes ppa:ansible/ansible
- sudo apt-get install --yes --force-yes git ansible
+ sudo apt-get install --yes git ansible
 ```
 
 ## Instalacja
